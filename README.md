@@ -8,14 +8,28 @@ La clase `Validator` implementa dos métodos (funciones) de validación: una pen
 
 ## 2. Documentación
 
-### 2.1. Instanciar la clase `Validator` para cada tabla final
+### 2.1. Instalación y uso
+
+Para instalar en el entorno de Python actual:
+
+```
+pip install git+https://github.com/r-leo/bigdata_validator.git
+```
+
+Para importar el módulo:
+
+```python
+from bigdata_validator import Validator
+```
+
+### 2.2. Instanciar la clase `Validator` para cada tabla final
 
 La clase `Validator` se instancia pasando como parámetros:
 
-* `data` (`str` o `pandas.DataFrame`): la tabla final que se va a validar. En caso de pasar un string, éste se interpreta como la ruta de un archivo CSV.
-* `region_isocode` (`str`): el nombre de la columna que contiene los códigos ISO regionales.
-* `region_name` (`str`): el nombre de una de las columnas que contiene el nombre de la región (no importa el idioma).
-* `category` (`str`): el tipo de indicador que contiene la tabla final. Los valores posibles son: `hf` (high frequency) y `hg` (high granulatity).
+* **`data`** (`str` o `pandas.DataFrame`): la tabla final que se va a validar. En caso de pasar un string, éste se interpreta como la ruta de un archivo CSV.
+* **`region_isocode`** (`str`): el nombre de la columna que contiene los códigos ISO regionales.
+* **`region_name`** (`str`): el nombre de una de las columnas que contiene el nombre de la región (no importa el idioma).
+* **`category`** (`str`): el tipo de indicador que contiene la tabla final. Los valores posibles son: `hf` (high frequency) y `hg` (high granulatity).
 
 Ejemplo:
 
@@ -28,7 +42,7 @@ val_investment = Validator('final_table_investment.csv', region_isocode='country
 val = Validator(df...)
 ```
 
-### 2.2. Validar dentro de un script: `is_valid()`
+### 2.3. Validar dentro de un script: `is_valid()`
 
 Para validar la tabla final dentro de un script, basta llamar al método `is_valid()`. Este método devuelve `True` si la tabla pasa la prueba de validación, y `False` en caso contrario.
 
@@ -43,7 +57,7 @@ table_valid.is_valid() # devuelve True
 table_invalid.is_valid() # devuelve False
 ```
 
-### 2.3. Obtener un reporte de errores: `validate()`
+### 2.4. Obtener un reporte de errores: `validate()`
 
 Por el contrario, para imprimir en la pantalla un reporte con los errores encontrados, basta llamar al método `.validate()`.
 
