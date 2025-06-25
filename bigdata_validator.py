@@ -23,7 +23,6 @@ class Validator:
             region_isocode: 'iso',
             region_name: 'region',
             name: 'name'})
-        self.category = category
         self.date_min = self.df.query('date != ""')['date'].min()
         self.date_max = self.df.query('date != ""')['date'].max()
         self.days = (datetime.fromisoformat(self.date_max)
