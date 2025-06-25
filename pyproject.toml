@@ -1,0 +1,6 @@
+[project]
+name = "bigdata_validator"
+version = "0.0.1"
+dependencies = [
+    "pandas"
+]
