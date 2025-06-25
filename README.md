@@ -70,6 +70,8 @@ Errores encontrados (26):
 
 ## 3. Pruebas que implementa la clase
 
+El método `Validator.is_valid()` devuelve `True` únicamente cuando se satisfacen todas las siguientes condiciones (nota: `validate()` siempre llama internamente a `is_valid()`, e imprime el reporte de errores sólo si `is_valid()` es `False`):
+
 * Que el número de fechas únicas sea menor o igual a 400.
 * Que cada combinación posible de nominal/real, código ISO y categoría no tenga fechas faltantes.
 * Que cada registro real tenga su correspondiente registro nominal.
