@@ -12,10 +12,10 @@ class Validator:
     def __init__(self, data: data = None, *, region_isocode: str = None,
                  region_name: str = None, category: str = None) -> None:
         if type(data) == str:
-            self.df = pd.read_csv(filename, dtype=str, skip_blank_lines=False)
+            self.df = pd.read_csv(data, dtype=str, skip_blank_lines=False)
             self.df = self.df.fillna('')
         elif type(data) == pandasDataFrame:
-            self.df = dataframe.copy()
+            self.df = data.copy()
         self.df = self.df.rename(columns={
             'NOMINAL_REAL_TYPE': 'type',
             'INTERANUAL_VARIATION_DATE': 'date',
