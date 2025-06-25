@@ -32,7 +32,7 @@ La clase `Validator` se instancia pasando como parámetros:
 * **`data`** (`str` o `pandas.DataFrame`): la tabla final que se va a validar. En caso de pasar un string, éste se interpreta como la ruta de un archivo CSV.
 * **`region_isocode`** (`str`): el nombre de la columna que contiene los códigos ISO regionales.
 * **`region_name`** (`str`): el nombre de una de las columnas que contiene el nombre de la región (no importa el idioma).
-* **`category`** (`str`): el tipo de indicador que contiene la tabla final. Los valores posibles son: `hf` (high frequency) y `hg` (high granulatity).
+* **`name`** (`str`): el nombre de la columna empleada para categorizar los datos.
 
 Ejemplo:
 
