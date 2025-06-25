@@ -4,7 +4,10 @@
 
 Para evitar que se envíen a la web de Big Data tablas que erróneas, se implementa el módulo de validación `Validator`. Este módulo recibe como entrada la ruta de un archivo CSV o bien un dataframe de `pandas` con todas las columnas de tipo `str`.
 
-La clase `Validator` implementa dos métodos (funciones) de validación: una pensada para integrarse en un script de Python (`.is_valid()`, que devuelve un `True` o `False` como resultado de la validación) y otra para imprimir en la pantalla un pequeño reporte con los errores encontrados, si los hay (`.validate()`).
+La clase `Validator` implementa dos métodos (funciones) de validación:
+
+* `.is_valid()`: pensada para integrarse en un script de Python. Devuelve `True` o `False` como resultado de la validación.
+* `.validate()`: imprime en pantalla un pequeño reporte con los errores encontrados, si los hay.
 
 ## 2. Documentación
 
