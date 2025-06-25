@@ -20,8 +20,9 @@ class Validator:
             'NOMINAL_REAL_TYPE': 'type',
             'INTERANUAL_VARIATION_DATE': 'date',
             'INTERANUAL_VARIATION': 'value',
+            'SHORT_SPANISH_NAME': 'name',
             region_isocode: 'iso',
-            region_name: 'name'})
+            region_name: 'region'})
         self.category = category
         self.date_min = self.df.query('date != ""')['date'].min()
         self.date_max = self.df.query('date != ""')['date'].max()
