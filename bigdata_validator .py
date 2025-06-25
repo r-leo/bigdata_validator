@@ -11,25 +11,10 @@ data: TypeAlias = Union[str, pd.DataFrame]
 class Validator:
     def __init__(self, data: data = None, *, region_isocode: str = None,
                  region_name: str = None, category: str = None) -> None:
-        """
-        Creates an instance of the validation process, for the filename or
-        dataframe specified.
-        
-        Arguments:
-        - filename (str): path of the CSV file with the data.
-        - dataframe (pandas.DataFrame): dataframe with the data.
-        - category (str): type of data to evaluate. Can be either 'hf' (high
-          frequency) or 'hg' (high granularity).
-        
-        Notes:
-        - If both 'filename' and 'dataframe' are provided, the instance will
-          only evaluate data from 'filename'.
-        """
-
-        if filename:
+        if type(data) == str:
             self.df = pd.read_csv(filename, dtype=str, skip_blank_lines=False)
             self.df = self.df.fillna('')
-        elif dataframe:
+        elif type(data) == pandasDataFrame:
             self.df = dataframe.copy()
         self.df = self.df.rename(columns={
             'NOMINAL_REAL_TYPE': 'type',
