@@ -10,7 +10,7 @@ data: TypeAlias = Union[str, pd.DataFrame]
 
 class Validator:
     def __init__(self, data: data = None, *, region_isocode: str = None,
-                 region_name: str = None, category: str = None) -> None:
+                 region_name: str = None, name: str = None) -> None:
         if type(data) == str:
             self.df = pd.read_csv(data, dtype=str, skip_blank_lines=False)
             self.df = self.df.fillna('')
@@ -20,9 +20,9 @@ class Validator:
             'NOMINAL_REAL_TYPE': 'type',
             'INTERANUAL_VARIATION_DATE': 'date',
             'INTERANUAL_VARIATION': 'value',
-            'SHORT_SPANISH_NAME': 'name',
             region_isocode: 'iso',
-            region_name: 'region'})
+            region_name: 'region',
+            name: 'name'})
         self.category = category
         self.date_min = self.df.query('date != ""')['date'].min()
         self.date_max = self.df.query('date != ""')['date'].max()
