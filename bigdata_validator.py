@@ -16,6 +16,7 @@ class Validator:
             self.df = self.df.fillna('')
         elif type(data) == pandasDataFrame:
             self.df = data.copy()
+        self.original_df = self.df.copy()
         self.df = self.df.rename(columns={
             'NOMINAL_REAL_TYPE': 'type',
             'INTERANUAL_VARIATION_DATE': 'date',
