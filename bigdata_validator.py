@@ -8,15 +8,19 @@ pandasDataFrame: TypeAlias = pd.DataFrame
 data: TypeAlias = Union[str, pd.DataFrame]
 
 
+def csv_to_dataframe(csv_path: str) -> pandasDataFrame:
+    df = pd.read_csv(data, dtype=str, skip_blank_lines=False)
+    df = df.fillna('')
+    return df
+    
+
 class Validator:
     def __init__(self, data: data = None, *, region_isocode: str = None,
                  region_name: str = None, name: str = None) -> None:
         if type(data) == str:
-            self.df = pd.read_csv(data, dtype=str, skip_blank_lines=False)
-            self.df = self.df.fillna('')
+            self.df = csv_to_dataframe(data)
         elif type(data) == pandasDataFrame:
             self.df = data.copy()
-        self.original_df = self.df.copy()
         self.df = self.df.rename(columns={
             'NOMINAL_REAL_TYPE': 'type',
             'INTERANUAL_VARIATION_DATE': 'date',
