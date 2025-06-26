@@ -2,20 +2,16 @@
 
 ## 1. Objetivo y alcance
 
-Para evitar que se envíen a la (nueva) web de Big Data tablas finales erróneas (es decir, no ajustadas a las políticas expresas de los indicadores), se llevó a cabo el diseño e implementación de un módulo de Python () que lleve a cabo de forma automática el proceso de validación final.
+El módulo `bigdata_validator` (para Python) se implementó con el propósito de evitar que se envíen a la (nueva) web de Big Data tablas finales erróneas (es decir, no ajustadas a las políticas expresas de los indicadores). Este módulo automatiza el proceso de validación final mediante una única clase `Validator()`. El constructor de esta clase recibe como parámetro (entre otros) los datos contenidos en la tabla final que se desea validar. El proceso de validación automática se ejecuta al llamar alguno de los siguientes métodos:
 
-Este módilo consta de una unica clase moel módulo de validación `Validator`. Este módulo recibe como entrada la ruta de un archivo CSV o bien un dataframe de `pandas` con todas las columnas de tipo `str`.
-
-La clase `Validator` implementa dos métodos (funciones) de validación:
-
-* `.is_valid()`: pensada para integrarse en un script de Python. Devuelve `True` o `False` como resultado de la validación.
-* `.validate()`: imprime en pantalla un pequeño reporte con los errores encontrados, si los hay.
+* `.is_valid()`: diseñada para integrarse en el flujo de un script de Python. Devuelve `True` en caso de que los datos pasen exitosamente el proceso de validación, y `False` en caso contrario.
+* `.validate()`: imprime en pantalla un breve reporte enlistando los errores encontrados, si los hay.
 
 ## 2. Documentación
 
 ### 2.1. Instalación y uso
 
-Para instalar en el entorno de Python actual:
+Para instalar, ejecutar desde la línea de comandos:
 
 ```
 pip install git+https://github.com/r-leo/bigdata_validator.git
@@ -31,10 +27,10 @@ from bigdata_validator import Validator
 
 La clase `Validator` se instancia pasando como parámetros:
 
-* **`data`** (`str` o `pandas.DataFrame`): la tabla final que se va a validar. En caso de pasar un string, éste se interpreta como la ruta de un archivo CSV.
-* **`region_isocode`** (`str`): el nombre de la columna que contiene los códigos ISO regionales.
-* **`region_name`** (`str`): el nombre de una de las columnas que contiene el nombre de la región (no importa el idioma).
-* **`name`** (`str`): el nombre de la columna empleada para categorizar los datos.
+* **`data`**: *`str` o `pandas.DataFrame`*. La tabla final que se va a validar. En caso de pasar un string, éste se interpreta como la ruta del archivo CSV correspondiente.
+* **`region_isocode`**: *`str`*. El nombre de la columna que contiene los códigos ISO que identifcan a la región geográfica. Por ejemplo: `COUNTRY_ISOCODE`.
+* **`region_name`**: *`str`*. El nombre de la columna que contiene el nombre de la región (no importa el idioma). Por ejemplo: `COUNTRY_SHORT_SPANISH_NAME`.
+* **`name`** (`str`): el nombre de la columna empleada para categorizar los datos. Por ejemplo: en el caso de consumo de alta frecuencia, `SHORT_SPANISH_NAME`; en el caso de actividad sectorial, `SUBSECTOR_SHORT_SPA`, etc.
 
 Ejemplo:
 
