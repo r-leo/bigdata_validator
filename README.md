@@ -17,7 +17,7 @@ Para instalar, ejecutar desde la línea de comandos:
 pip install git+https://github.com/r-leo/bigdata_validator.git
 ```
 
-Para importar el módulo:
+Para importar el módulo, añadir esta línea al inicio de script .py, en una celda de Jupyter o directamente en el intérprete:
 
 ```python
 from bigdata_validator import Validator
@@ -25,7 +25,7 @@ from bigdata_validator import Validator
 
 ### 2.2. Instanciar la clase `Validator` para cada tabla final
 
-La clase `Validator` se instancia pasando como parámetros:
+La clase `Validator` se instancia (inicializa) pasando como parámetros:
 
 * **`data`**: *`str` o `pandas.DataFrame`*. La tabla final que se va a validar. En caso de pasar un string, éste se interpreta como la ruta del archivo CSV correspondiente.
 * **`region_isocode`**: *`str`*. El nombre de la columna que contiene los códigos ISO que identifcan a la región geográfica. Por ejemplo: `COUNTRY_ISOCODE`.
@@ -36,8 +36,8 @@ Ejemplo:
 
 ```python
 # Crear validador para una tabla contenida en un CSV
-val_investment = Validator('final_table_investment.csv', region_isocode='country_isocode',
-                           region_name='country_short_spanish_name', category='hf')
+val_investment = Validator('final_table_investment.csv', region_isocode='COUNTRY_ISOCODE',
+                           region_name='COUNTRY_SHORT_SPANISH_NAME', name='SHORT_SPANISH_NAME')
 
 # Si la tabla está en el dataframe de pandas df, entonces:
 val = Validator(df...)
@@ -54,13 +54,13 @@ Ejemplo:
 table_valid = Validator('path_to_valid_table.csv'...)
 table_invalid = Validator('path_to_invalid_table.csv'...)
 
-table_valid.is_valid() # devuelve True
-table_invalid.is_valid() # devuelve False
+table_valid.is_valid() # -> devuelve True
+table_invalid.is_valid() # -> devuelve False
 ```
 
 ### 2.4. Obtener un reporte de errores: `validate()`
 
-Por el contrario, para imprimir en la pantalla un reporte con los errores encontrados, basta llamar al método `.validate()`.
+Si se requiere un detalle mayor de los errores encontrados, el método `.validate()` imprime en pantalla un breve reporte con la información.
 
 Ejemplo:
 
@@ -83,9 +83,11 @@ Errores encontrados (26):
 ...
 ```
 
-## 3. Pruebas que implementa la clase
+## 3. Pruebas internas que implementa la clase
 
-El método `Validator.is_valid()` devuelve `True` únicamente cuando se satisfacen todas las siguientes condiciones (nota: `validate()` siempre llama internamente a `is_valid()`, e imprime el reporte de errores sólo si `is_valid()` es `False`):
+`Validator.is_valid()` devuelve `True` únicamente cuando se satisfacen todas las siguientes condiciones
+
+> Nota: `validate()` siempre ejecuta internamente `is_valid()`, y dependiendo del valor que devuelva dicha función, imprime el reporte de errores (sólo si `Validator.is_valid() == False`):
 
 * Que el número de fechas únicas sea menor o igual a 400.
 * Que cada combinación posible de nominal/real, código ISO y categoría no tenga fechas faltantes.
