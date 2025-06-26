@@ -2,10 +2,7 @@
 
 ## 1. Objetivo y alcance
 
-El módulo `bigdata_validator` (para Python) se implementó con el propósito de evitar que se envíen a la (nueva) web de Big Data tablas finales erróneas (es decir, no ajustadas a las políticas expresas de los indicadores). Este módulo automatiza el proceso de validación final mediante una única clase `Validator()`. El constructor de esta clase recibe como parámetro (entre otros) los datos contenidos en la tabla final que se desea validar. El proceso de validación automática se ejecuta al llamar alguno de los siguientes métodos:
-
-* `.is_valid()`: diseñada para integrarse en el flujo de un script de Python. Devuelve `True` en caso de que los datos pasen exitosamente el proceso de validación, y `False` en caso contrario.
-* `.validate()`: imprime en pantalla un breve reporte enlistando los errores encontrados, si los hay.
+El módulo `bigdata_validator` (para Python) se implementó con el propósito de evitar que se envíen a la nueva web de Big Data tablas finales que no se ajusten a las políticas explícitas establecidas. Este módulo automatiza el proceso de validación final implementando un objeto `Validator` ("validador") que abstrae el proceso de verificación que de otra forma tendría que hacerse manualmente. Tiene la flexibilidad necesaria para integrarse dentro de un script de Python, o bien ejecutarse de forma interactiva en el intérprete de Python o la celda de un notebook.
 
 ## 2. Documentación
 
