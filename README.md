@@ -27,10 +27,14 @@ from bigdata_validator import Validator
 
 La clase `Validator` se instancia (inicializa) pasando como parámetros:
 
-* **`data`**: *`str` o `pandas.DataFrame`*. La tabla final que se va a validar. En caso de pasar un string, éste se interpreta como la ruta del archivo CSV correspondiente.
-* **`region_isocode`**: *`str`*. El nombre de la columna que contiene los códigos ISO que identifcan a la región geográfica. Por ejemplo: `COUNTRY_ISOCODE`.
-* **`region_name`**: *`str`*. El nombre de la columna que contiene el nombre de la región (no importa el idioma). Por ejemplo: `COUNTRY_SHORT_SPANISH_NAME`.
-* **`name`** (`str`): el nombre de la columna empleada para categorizar los datos. Por ejemplo: en el caso de consumo de alta frecuencia, `SHORT_SPANISH_NAME`; en el caso de actividad sectorial, `SUBSECTOR_SHORT_SPA`, etc.
+* **`data`**: `str` o `pandas.DataFrame`</br>
+La tabla final que se va a validar. Puede ser un objeto `pandas.DataFrame` o un string. En caso de pasar un string, éste se interpreta como la ruta al archivo CSV que contiene los datos (debe incluir la extensión .csv).
+* **`region_isocode`**: `str`</br>
+El nombre de la columna que contiene los códigos ISO que identifcan a la región geográfica. Por ejemplo: `COUNTRY_ISOCODE`.
+* **`region_name`**: `str`</br>
+El nombre de la columna que contiene el nombre de la región (no importa el idioma). Por ejemplo: `COUNTRY_SHORT_SPANISH_NAME`.
+* **`name`**: `str`</br>
+El nombre de la columna empleada para categorizar los datos. Por ejemplo: en el caso de consumo de alta frecuencia, `SHORT_SPANISH_NAME`; en el caso de actividad sectorial, `SUBSECTOR_SHORT_SPA`, etc.
 
 Ejemplo:
 
