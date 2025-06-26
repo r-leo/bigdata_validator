@@ -8,7 +8,7 @@ pandasDataFrame: TypeAlias = pd.DataFrame
 data: TypeAlias = Union[str, pd.DataFrame]
 
 
-def csv_to_dataframe(csv_path: str) -> pandasDataFrame:
+def csv_to_dataframe(csv_path):
     df = pd.read_csv(data, dtype=str, skip_blank_lines=False)
     df = df.fillna('')
     return df
