@@ -1,8 +1,10 @@
 # Validador de tablas finales
 
-## 1. Propósito
+## 1. Objetivo y alcance
 
-Para evitar que se envíen a la web de Big Data tablas que erróneas, se implementa el módulo de validación `Validator`. Este módulo recibe como entrada la ruta de un archivo CSV o bien un dataframe de `pandas` con todas las columnas de tipo `str`.
+Para evitar que se envíen a la (nueva) web de Big Data tablas finales erróneas (es decir, no ajustadas a las políticas expresas de los indicadores), se llevó a cabo el diseño e implementación de un módulo de Python () que lleve a cabo de forma automática el proceso de validación final.
+
+Este módilo consta de una unica clase moel módulo de validación `Validator`. Este módulo recibe como entrada la ruta de un archivo CSV o bien un dataframe de `pandas` con todas las columnas de tipo `str`.
 
 La clase `Validator` implementa dos métodos (funciones) de validación:
 
