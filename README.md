@@ -1,31 +1,42 @@
 # Validador de tablas finales
 
+
 ## 1. Objetivo y alcance
 
-El módulo `bigdata_validator` (para Python) se implementó con el propósito de evitar que se envíen a la nueva web de Big Data tablas finales que no se ajusten a las políticas explícitas establecidas. Este módulo automatiza el proceso de validación final implementando un objeto `Validator` ("validador") que abstrae el proceso de verificación que de otra forma tendría que hacerse manualmente. Tiene la flexibilidad necesaria para integrarse dentro de un script de Python, o bien ejecutarse de forma interactiva en el intérprete de Python o la celda de un notebook.
+**`bigdata_validator`** es un módulo de Python diseñado con el propósito de evitar que se envíen a la nueva web de Big Data tablas finales que no se ajusten a las políticas explícitas establecidas. El módulo automatiza el proceso de validación final implementando un objeto `Validator` que lleva a cabo el proceso de verificación que de otra forma tendría que hacerse manualmente. Tiene la flexibilidad necesaria para integrarse dentro de un script de Python, o bien ejecutarse de forma interactiva en el intérprete o la celda de un notebook (de Jupyter por ejemplo).
 
-## 2. Documentación
 
-### 2.1. Instalación y uso
+## 2. Instalación / descarga
 
-Para instalar, ejecutar desde la línea de comandos:
+### 2.1. Opción A: instalación local con pip
 
-```
+Para instalar usando pip, ejecutar la siguiente línea en la terminal:
+
+```bash
 pip install git+https://github.com/r-leo/bigdata_validator.git
 ```
 
-Para importar el módulo, añadir esta línea al inicio de script .py, en una celda de Jupyter o directamente en el intérprete:
+### 2.2. Opción B: descarga directa (sin instalación)
+
+Para usar el módulo sin instalarlo, descargar el archivo [bigdata_validator.py](./bigdata_validator.py) y guardarlo en el mismo directorio donde se encuentre el script de Python o el notebook donde se desee utilizar.
+
+
+## 3. Uso
+
+### 3.1. Importar el módulo
+
+Para importar el módulo:
 
 ```python
 from bigdata_validator import Validator
 ```
 
-### 2.2. Instanciar la clase `Validator` para cada tabla final
+### 3.2. Crear un objeto `Validator` para cada tabla final
 
-La clase `Validator` se instancia (inicializa) pasando como parámetros:
+La clase `Validator` se crea pasando los siguientes parámetros:
 
 * **`data`**: `str` o `pandas.DataFrame`</br>
-La tabla final que se va a validar. Puede ser un objeto `pandas.DataFrame` o un string. En caso de pasar un string, éste se interpreta como la ruta al archivo CSV que contiene los datos (debe incluir la extensión .csv).
+La tabla final que se va a validar. Puede ser un objeto `pandas.DataFrame` o un string que contenga la ruta al archivo CSV que contiene los datos.
 * **`region_isocode`**: `str`</br>
 El nombre de la columna que contiene los códigos ISO que identifcan a la región geográfica. Por ejemplo: `COUNTRY_ISOCODE`.
 * **`region_name`**: `str`</br>
@@ -36,38 +47,38 @@ El nombre de la columna empleada para categorizar los datos. Por ejemplo: en el 
 Ejemplo:
 
 ```python
-# Crear validador para una tabla contenida en un CSV
+# Si los datos están contenidos en un CSV:
 val_investment = Validator('final_table_investment.csv', region_isocode='COUNTRY_ISOCODE',
                            region_name='COUNTRY_SHORT_SPANISH_NAME', name='SHORT_SPANISH_NAME')
 
-# Si la tabla está en el dataframe de pandas df, entonces:
-val = Validator(df...)
+# Si los datos están ya en un dataframe de pandas:
+val_investment = Validator(df_investment, region_isocode='COUNTRY_ISOCODE',
+                           region_name='COUNTRY_SHORT_SPANISH_NAME', name='SHORT_SPANISH_NAME')
 ```
 
-### 2.3. Validar dentro de un script: `is_valid()`
 
-Para validar la tabla final dentro de un script, basta llamar al método `is_valid()`. Este método devuelve `True` si la tabla pasa la prueba de validación, y `False` en caso contrario.
+### 3.3. Ejecutar el proceso de validación
+
+Hay ds formas de ejecutar el proceso de validación:
+
+#### Opción A: usando `is_valid()`
+
+El método `is_valid()` simplemente devuelve `True` si la tabla pasa la prueba de validación, y `False` en caso contrario. No proporciona ningún detalle adicional en caso de que la tabla no pase la prueba.
 
 Ejemplo:
 
 ```python
-# Crear objetos Validator para una tabla válida y una inválida
-table_valid = Validator('path_to_valid_table.csv'...)
-table_invalid = Validator('path_to_invalid_table.csv'...)
-
-table_valid.is_valid() # -> devuelve True
-table_invalid.is_valid() # -> devuelve False
+val_investment.is_valid() # -> devuelve True (pasó la prueba) o False (no pasó la prueba)
 ```
 
-### 2.4. Obtener un reporte de errores: `validate()`
+#### Opción B: usando `validate()`
 
-Si se requiere un detalle mayor de los errores encontrados, el método `.validate()` imprime en pantalla un breve reporte con la información.
+El método `.validate()` lleva a cabo el proceso de validación de la tabla, y en caso de que no lo pase satisfactoriamente, imprime en pantalla los criterios donde falló.
 
 Ejemplo:
 
 ```python
-table_invalid = Validator('path_to_invalid_table.csv'...)
-table_invalid.validate()
+val_investment.validate()
 ```
 
 El código anterior imprime en la pantalla el reporte de los errores:
@@ -84,7 +95,14 @@ Errores encontrados (26):
 ...
 ```
 
-## 3. Pruebas internas que implementa la clase
+
+## 4. Notas importantes
+
+1. En caso de leer archivos CSV, es obligatorio que estén codificados con UTF-8.
+1. **Importante**: por el momento, el módulo sólo acepta como separador decimal el punto.
+
+
+## Anexo técnico: pruebas internas que se llevan a cabo
 
 El método `.validate()` siempre ejecuta internamente `is_valid()`. Posteriormente, si `Validator.is_valid() == False` imprime en pantalla el listado de errores encontrados. En caso contrario indica al usuario que no se encontró ningún error. Por otra parte, `.is_valid()` devuelve `True` únicamente cuando se satisfacen todas las siguientes condiciones:
 
