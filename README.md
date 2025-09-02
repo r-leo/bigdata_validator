@@ -63,9 +63,7 @@ Hay ds formas de ejecutar el proceso de validación:
 
 #### Opción A: usando `is_valid()`
 
-El método `is_valid()` simplemente devuelve `True` si la tabla pasa la prueba de validación, y `False` en caso contrario. No proporciona ningún detalle adicional en caso de que la tabla no pase la prueba.
-
-Ejemplo:
+El método `is_valid()` simplemente devuelve `True` si la tabla pasa la prueba de validación, y `False` en caso contrario. No proporciona ningún detalle adicional en caso de que la tabla no pase la prueba. Ejemplo:
 
 ```python
 val_investment.is_valid() # -> devuelve True (pasó la prueba) o False (no pasó la prueba)
@@ -73,9 +71,7 @@ val_investment.is_valid() # -> devuelve True (pasó la prueba) o False (no pasó
 
 #### Opción B: usando `validate()`
 
-El método `.validate()` lleva a cabo el proceso de validación de la tabla, y en caso de que no lo pase satisfactoriamente, imprime en pantalla los criterios donde falló.
-
-Ejemplo:
+El método `.validate()` lleva a cabo el proceso de validación de la tabla, y en caso de que no lo pase satisfactoriamente, imprime en pantalla los criterios donde falló. Ejemplo:
 
 ```python
 val_investment.validate()
@@ -102,18 +98,22 @@ Errores encontrados (26):
 1. **Importante**: por el momento, el módulo sólo acepta como separador decimal el punto.
 
 
-## Anexo técnico: pruebas internas que se llevan a cabo
+## 5. Anexo: estructura del proceso de validación
 
-El método `.validate()` siempre ejecuta internamente `is_valid()`. Posteriormente, si `Validator.is_valid() == False` imprime en pantalla el listado de errores encontrados. En caso contrario indica al usuario que no se encontró ningún error. Por otra parte, `.is_valid()` devuelve `True` únicamente cuando se satisfacen todas las siguientes condiciones:
+> **Nota**. No es necesario leer esta sección para usar el módulo. Únicamente describe las pruebas que se llevan a cabo sobre los datos para determinar si son válidos o no.
 
-1. Que el número de fechas únicas sea menor o igual a 400.
-1. Que cada combinación posible de nominal/real, código ISO y categoría no tenga fechas faltantes.
-1. Que cada registro real tenga su correspondiente registro nominal.
-1. Que cada combinación posible de nominal/real, código ISO y categoría tenga datos para la última fecha.
-1. Que todas las fechas tengan formato ISO (AAAA-MM-DD). Esto se verifica mediante la búsqueda de un match completo de cada registro de fecha contra la [expresión regular](https://regex101.com/r/0jtIVD/1) `\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])`. Como se observa, no se admiten fechas vacías.
-1. Que todos los valores de variación interanual tengan el formato correcto. Esto se verifica mediante la búsqueda de un match completo de cada registro contra la [expresión regular](https://regex101.com/r/U4L5uF/1) `.{0}|(-?\d+\.\d{4})`. Como se observa, se admiten valores vacíos. El formato es como sigue:
-   1. Signo: signo negativo (`-`) o ausencia de signo (no se admite el signo positivo `+`).
-   1. Parte entera: uno o más dígitos.
-   1. Separador decimal (obligatorio), debe ser un punto.
-   1. Parte decimal: compuesta por exactamente 4 dígitos. Si es necesario deben agregarse ceros a la derecha hasta completar las cuatro cifras.
+El método `validate()` siempre ejecuta internamente `is_valid()`. Si el resultado es `False`, recopila los errores encontrados junto con su descripción y los imprime línea por línea enla pantalla. En caso contrario indica al usuario que no se encontró ningún error.
+
+Por otra parte, `is_valid()` devuelve `True` únicamente cuando se satisfacen todas las siguientes condiciones:
+
+1. El número de fechas únicas es menor o igual a 400.
+1. Cada combinación posible de nominal/real, código ISO y categoría no tiene fechas faltantes.
+1. Cada registro real tiene su correspondiente registro nominal.
+1. Cada combinación posible de nominal/real, código ISO y categoría tiene datos para la última fecha.
+1. Todas las fechas tienen formato ISO (AAAA-MM-DD). Esto se verifica mediante la búsqueda de un match completo de cada registro de fecha contra la [expresión regular](https://regex101.com/r/0jtIVD/1) `\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])`. Como se observa, no se admiten fechas vacías.
+1. Todos los valores de variación interanual tienen el formato correcto. Esto se verifica mediante la búsqueda de un match completo de cada registro contra la [expresión regular](https://regex101.com/r/U4L5uF/1) `.{0}|(-?\d+\.\d{4})`. Sí se admiten valores vacíos. El formato es como sigue:
+   1. *Signo*, ya sea negativo (`-`) o ausencia de signo (no se admite el signo positivo `+`).
+   1. *Parte entera*, consistente en uno o más dígitos.
+   1. *Separador decimal*, es obligatorio y debe ser un punto.
+   1. *Parte decimal*, compuesta por exactamente 4 dígitos (de acuerdo con las políticas, si es necesario deben agregarse ceros a la derecha hasta completar las cuatro cifras de la parte decimal).
 
