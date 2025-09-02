@@ -81,7 +81,7 @@ Ejemplo:
 val_investment.validate()
 ```
 
-El código anterior imprime en la pantalla el reporte de los errores:
+El código anterior imprime en la pantalla un mensaje indicando si la tabla pasó o no la prueba. En caso de que no la pase, muestra un reporte de los errores encontrados. Un ejemplo de reporte de errores es:
 
 ```
 Errores encontrados (26):
