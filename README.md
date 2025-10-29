@@ -28,8 +28,21 @@ Para usar el módulo sin instalarlo, descargar el archivo [bigdata_validator.py]
 Para importar el módulo:
 
 ```python
+import bigdata_validator
 from bigdata_validator import Validator
 ```
+
+Para verificar que esté instalada la versión más reciente (`1.0.0`):
+
+```python
+print(bigdata_validator.__version__)
+```
+
+> [!NOTE]
+> Si la versión instalada no es la más reciente, actualizar usando pip en la terminal:
+> ```bash
+> pip install --upgrade git+https://github.com/r-leo/bigdata_validator.git
+> ```
 
 ### 3.2. Crear un objeto `Validator` para cada tabla final
 
