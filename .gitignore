@@ -1,0 +1,3 @@
+*.csv
+/notebook_test.ipynb
+/__pycache__

@@ -1,8 +1,20 @@
-import pandas as pd
+#
+# -----------------------------------------------------------------------------
+# bigdata_validator
+# Rodrigo Leo
+# -----------------------------------------------------------------------------
+#
 
+
+# Module version
+__version__ = "1.0.0"
+
+# Import dependencies
+import pandas as pd
 from datetime import datetime
 from typing import TypeAlias, Union
 
+# Define type aliases
 pandasSeries: TypeAlias = pd.Series
 pandasDataFrame: TypeAlias = pd.DataFrame
 data: TypeAlias = Union[str, pd.DataFrame]
@@ -12,7 +24,7 @@ def csv_to_dataframe(csv_path: str) -> pandasDataFrame:
     df = pd.read_csv(csv_path, dtype=str, skip_blank_lines=False)
     df = df.fillna('')
     return df
-    
+
 
 class Validator:
     def __init__(self, data: data = None, *, region_isocode: str = None,
