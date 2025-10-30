@@ -48,7 +48,7 @@ print(bigdata_validator.__version__)
 
 La clase `Validator` se crea pasando los siguientes parámetros:
 
-* **`data`**: `str` o `pandas.DataFrame` (requerido). La tabla final que se va a validar. Puede ser un objeto `pandas.DataFrame` o un string que contenga la ruta al archivo CSV que contiene los datos.
+* **`data`**: `str` o `pandas.DataFrame` (requerido). La tabla final que se va a validar. Puede ser un objeto `pandas.DataFrame` o un string que contenga la ruta al archivo CSV que contiene los datos. En caso de pasar la ruta a un archivo CSV, éste debe estar codificado con UTF-8.
 * **`indicator`**: `str` (requerido). El nombre del indicador. Debe tomar uno de los siguientes posibles valores:
    * Indicadores de *alta frecuencia*:
      * `"hf_consumption"` = consumo.
@@ -108,12 +108,6 @@ Errores encontrados (26):
 6	El registro ['N' 'MX-NAY' 'Aerolíneas'] no tiene datos para la última fecha.
 ...
 ```
-
-
-## 4. Notas importantes
-
-1. En caso de leer archivos CSV, es obligatorio que estén codificados con UTF-8.
-1. **Importante**: por el momento, el módulo sólo acepta como separador decimal el punto.
 
 
 ## 5. Anexo: estructura del proceso de validación
