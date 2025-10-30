@@ -7,7 +7,7 @@
 
 
 # Module version
-__version__ = '2.0.0'
+__version__ = '2.1.0'
 
 # Import dependencies
 import pandas as pd
@@ -15,12 +15,16 @@ from datetime import datetime
 from typing import Union
 from textwrap import dedent
 
-
 class Validator:
     def __init__(self, data: Union[str, pd.DataFrame],
                  indicator: str,
+                 file_separator: str = ',',
+                 decimal_separator: str = '.',
                  is_global: bool = False):
         
+        self.decimal_separator = decimal_separator
+        self.valid_decimal_separator = True
+        self.invalid_decimal_message = ""
         self.valid_indicator_name = True
         self.invalid_name_message = ""
 
@@ -91,6 +95,11 @@ class Validator:
         if not self.valid_indicator_name:
             print(self.invalid_name_message)
             return
+        if self.decimal_separator not in ('.', ','):
+            self.valid_decimal_separator = False
+            self.invalid_decimal_message = f'ERROR: El separador decimal "{self.decimal_separator}" no es válido. Sólo se admite punto (".") o coma (",").'
+            print(self.invalid_decimal_message)
+            return
         
         self.region_isocode = iso
         self.region_name = reg
@@ -99,7 +108,7 @@ class Validator:
         self.order = order
         
         if type(data) == str:
-            df = pd.read_csv(data, dtype=str, skip_blank_lines=False)
+            df = pd.read_csv(data, sep=file_separator, dtype=str, skip_blank_lines=False)
             df = df.fillna('')
             self.df = df
         elif type(data) == pd.DataFrame:
@@ -165,7 +174,10 @@ class Validator:
 
     def _test_values(self) -> None:
         values = self.df['value']
-        regex = r'.{0}|(-?\d+\.\d{4})'
+        if self.decimal_separator == '.':
+            regex = r'.{0}|(-?\d+\.\d{4})'
+        else:
+            regex = r'.{0}|(-?\d+,\d{4})'
         test = self._test_regex(values, regex)
         if len(test['rows_nomatch']) > 0:
             self.errors.append(f'Valores erróneas en la(s) fila(s): '
@@ -190,7 +202,7 @@ class Validator:
                 self.errors.append(f'El orden correcto es: {self.order}.')
 
     def is_valid(self) -> bool:
-        if not self.valid_indicator_name:
+        if (not self.valid_indicator_name) or (not self. valid_decimal_separator):
             return False
         self._test_date_number()
         self._test_date_continuity()
@@ -205,6 +217,9 @@ class Validator:
     def validate(self) -> None:
         if not self.valid_indicator_name:
             print(self.invalid_name_message)
+            return
+        if not self.valid_decimal_separator:
+            print(self.invalid_decimal_message)
             return
         if self.is_valid():
             print('No se encontraron errores.')

@@ -35,7 +35,7 @@ import bigdata_validator
 from bigdata_validator import Validator
 ```
 
-Para verificar que esté instalada la versión más reciente (`2.0.0`):
+Para verificar que esté instalada la versión más reciente (`2.1.0`):
 
 ```python
 print(bigdata_validator.__version__)
@@ -51,20 +51,20 @@ print(bigdata_validator.__version__)
 
 La clase `Validator` se crea pasando los siguientes parámetros:
 
-* **`data`**: `str` o `pandas.DataFrame`</br>
-La tabla final que se va a validar. Puede ser un objeto `pandas.DataFrame` o un string que contenga la ruta al archivo CSV que contiene los datos.
-* **`indicator`**: `str`</br>
-El nombre del indicador. Valores posibles:
-   * Indicadores de **alta frecuencia**:
-     * `hf_consumption` = consumo.
-     * `hf_investment` = inversión.
-     * `hf_external` = sector exterior.
-     * `hf_sectoral` = actividad sectorial.
-   * Indicadores de **alta granularidad**:
-     * `hg_national` =  consumo agregado (nacional).
-     * `hg_regions` = consumo por regiones.
-     * `hg_states` = consumo por estados.
-     * `hg_cities` = consumo por ciudades.
+* **`data`**: `str` o `pandas.DataFrame` (requerido). La tabla final que se va a validar. Puede ser un objeto `pandas.DataFrame` o un string que contenga la ruta al archivo CSV que contiene los datos.
+* **`indicator`**: `str` (requerido). El nombre del indicador. Debe tomar uno de los siguientes posibles valores:
+   * Indicadores de *alta frecuencia*:
+     * `"hf_consumption"` = consumo.
+     * `"hf_investment"` = inversión.
+     * `"hf_external"` = sector exterior.
+     * `"hf_sectoral"` = actividad sectorial.
+   * Indicadores de *alta granularidad*:
+     * `"hg_national"` =  consumo agregado (nacional).
+     * `"hg_regions"` = consumo por regiones.
+     * `"hg_states"` = consumo por estados.
+     * `"hg_cities"` = consumo por ciudades.
+* **`file_separator`**: `str` (opcional, por defecto: `","`). El separador de campos en caso de que los datos provengan de un archivo CSV.
+* **`decimal_separator`**: `str` (opcional, por defecto: `"."`). El separador decimal de la variable `INTERANUAL_VARIATION_DATE`. Este separador se emplea independientemente de si los datos proporcionados son un archivo CSV o un DataFrame de pandas. Sólo se admiten como valores el punto (`"."`) y la coma (`","`).
 
 Ejemplo:
 
