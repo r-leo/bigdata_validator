@@ -1,3 +1,6 @@
+> [!CAUTION]
+> **Esta versión incorpora cambios importantes en el uso del módulo**, revisa con detalle la sección sobre [creación del objeto `Validator`](#32-crear-un-objeto-validator-para-cada-tabla-final).
+
 # Validador de tablas finales
 
 
@@ -124,16 +127,14 @@ El método `validate()` siempre ejecuta internamente `is_valid()`. Si el resulta
 
 Por otra parte, `is_valid()` devuelve `True` únicamente cuando se satisfacen todas las siguientes condiciones:
 
-1. El número de fechas únicas es menor o igual a 400.
-1. Cada combinación posible de nominal/real, código ISO y categoría no tiene fechas faltantes.
-1. Cada registro real tiene su correspondiente registro nominal.
-1. Cada combinación posible de nominal/real, código ISO y categoría tiene datos para la última fecha.
-1. Todas las fechas tienen formato ISO (AAAA-MM-DD). Esto se verifica mediante la búsqueda de un match completo de cada registro de fecha contra la [expresión regular](https://regex101.com/r/0jtIVD/1) `\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])`. Como se observa, no se admiten fechas vacías.
-1. Todos los valores de variación interanual tienen el formato correcto. Esto se verifica mediante la búsqueda de un match completo de cada registro contra la [expresión regular](https://regex101.com/r/U4L5uF/1) `.{0}|(-?\d+\.\d{4})`. Sí se admiten valores vacíos. El formato es como sigue:
-   1. *Signo*, ya sea negativo (`-`) o ausencia de signo (no se admite el signo positivo `+`).
-   1. *Parte entera*, consistente en uno o más dígitos.
-   1. *Separador decimal*, es obligatorio y debe ser un punto.
-   1. *Parte decimal*, compuesta por exactamente 4 dígitos (de acuerdo con las políticas, si es necesario deben agregarse ceros a la derecha hasta completar las cuatro cifras de la parte decimal).
-1. Existen datos agregados (columna *Total*) para los indicadores de consumo (alta frecuencia), inversión (alta frecuencia) y todos los de alta granularidad.
-1. Para los siguientes indicadores, el orden debe ser como sigue:
-   1. **Sector exterior**: exportaciones, importaciones.
+### Condiciones generales (aplican a todos los indicadores)
+1. El número de valores únicos del campo de fecha debe ser menor o igual a 400.
+1. Ninguna combinación de nominal/real, región geográfica y categoría debe tener fechas faltantes.
+1. Para cada registro real debe existir el correspondiente registro nominal.
+1. Todas las combinaciones de nominal/real, región geográfica y categoría debe tener datos no nulos en el registro correspondiente a la fecha más reciente de la tabla.
+1. La variable de fecha debe estar expresada como AAAA-MM-DD, lo que equivale a la siguiente [expresión regular](https://regex101.com/r/0jtIVD/1): `\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])`. No se admiten fechas vacías.
+1. La variable de variación interanual debe tener el formato definido por la [expresión regular](https://regex101.com/r/U4L5uF/1) `.{0}|(-?\d+\.\d{4})`. Sí se admiten valores vacíos. El formato consta de la concatenación de: **signo**, ya sea negativo (`-`) o sin signo; **parte entera**, consistente en uno o más dígitos; **separador decimal**, que es obligatorio y debe ser un punto (`.`); y **parte decimal**, compuesta por exactamente 4 dígitos (de acuerdo con las políticas, si es necesario deben agregarse ceros a la derecha hasta completar cuatro dígitos en la parte decimal).
+
+### Condiciones específicas (sólo aplican a algunos indicadores)
+1. Deben existir datos agregados (es decir, la categoría `Total`) para los indicadores de consumo (`hf_consumption`), inversión (`hf_investment`) y todos los de alta granularidad (`hg_*`).
+1. El orden de las categorías del  indicador de sector exterior debe ser (exportaciones, importaciones).
