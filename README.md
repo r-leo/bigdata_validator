@@ -32,7 +32,7 @@ import bigdata_validator
 from bigdata_validator import Validator
 ```
 
-Para verificar que esté instalada la versión más reciente (`1.0.0`):
+Para verificar que esté instalada la versión más reciente (`2.0.0`):
 
 ```python
 print(bigdata_validator.__version__)
@@ -50,23 +50,27 @@ La clase `Validator` se crea pasando los siguientes parámetros:
 
 * **`data`**: `str` o `pandas.DataFrame`</br>
 La tabla final que se va a validar. Puede ser un objeto `pandas.DataFrame` o un string que contenga la ruta al archivo CSV que contiene los datos.
-* **`region_isocode`**: `str`</br>
-El nombre de la columna que contiene los códigos ISO que identifcan a la región geográfica. Por ejemplo: `COUNTRY_ISOCODE`.
-* **`region_name`**: `str`</br>
-El nombre de la columna que contiene el nombre de la región (no importa el idioma). Por ejemplo: `COUNTRY_SHORT_SPANISH_NAME`.
-* **`name`**: `str`</br>
-El nombre de la columna empleada para categorizar los datos. Por ejemplo: en el caso de consumo de alta frecuencia, `SHORT_SPANISH_NAME`; en el caso de actividad sectorial, `SUBSECTOR_SHORT_SPA`, etc.
+* **`indicator`**: `str`</br>
+El nombre del indicador. Valores posibles:
+   * Indicadores de **alta frecuencia**:
+     * `hf_consumption` = consumo.
+     * `hf_investment` = inversión.
+     * `hf_external` = sector exterior.
+     * `hf_sectoral` = actividad sectorial.
+   * Indicadores de **alta granularidad**:
+     * `hg_national` =  consumo agregado (nacional).
+     * `hg_regions` = consumo por regiones.
+     * `hg_states` = consumo por estados.
+     * `hg_cities` = consumo por ciudades.
 
 Ejemplo:
 
 ```python
 # Si los datos están contenidos en un CSV:
-val_investment = Validator('final_table_investment.csv', region_isocode='COUNTRY_ISOCODE',
-                           region_name='COUNTRY_SHORT_SPANISH_NAME', name='SHORT_SPANISH_NAME')
+val_investment = Validator('final_table_investment.csv', 'hf_investment')
 
 # Si los datos están ya en un dataframe de pandas:
-val_investment = Validator(df_investment, region_isocode='COUNTRY_ISOCODE',
-                           region_name='COUNTRY_SHORT_SPANISH_NAME', name='SHORT_SPANISH_NAME')
+val_investment = Validator(df_investment, 'hf_investment')
 ```
 
 
@@ -79,7 +83,8 @@ Hay ds formas de ejecutar el proceso de validación:
 El método `is_valid()` simplemente devuelve `True` si la tabla pasa la prueba de validación, y `False` en caso contrario. No proporciona ningún detalle adicional en caso de que la tabla no pase la prueba. Ejemplo:
 
 ```python
-val_investment.is_valid() # -> devuelve True (pasó la prueba) o False (no pasó la prueba)
+val_investment.is_valid()
+# -> devuelve True (pasó la prueba) o False (no pasó la prueba)
 ```
 
 #### Opción B: usando `validate()`
@@ -129,4 +134,6 @@ Por otra parte, `is_valid()` devuelve `True` únicamente cuando se satisfacen to
    1. *Parte entera*, consistente en uno o más dígitos.
    1. *Separador decimal*, es obligatorio y debe ser un punto.
    1. *Parte decimal*, compuesta por exactamente 4 dígitos (de acuerdo con las políticas, si es necesario deben agregarse ceros a la derecha hasta completar las cuatro cifras de la parte decimal).
-
+1. Existen datos agregados (columna *Total*) para los indicadores de consumo (alta frecuencia), inversión (alta frecuencia) y todos los de alta granularidad.
+1. Para los siguientes indicadores, el orden debe ser como sigue:
+   1. **Sector exterior**: exportaciones, importaciones.

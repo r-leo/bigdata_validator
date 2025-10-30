@@ -7,46 +7,120 @@
 
 
 # Module version
-__version__ = "1.0.0"
+__version__ = '2.0.0'
 
 # Import dependencies
 import pandas as pd
 from datetime import datetime
-from typing import TypeAlias, Union
-
-# Define type aliases
-pandasSeries: TypeAlias = pd.Series
-pandasDataFrame: TypeAlias = pd.DataFrame
-data: TypeAlias = Union[str, pd.DataFrame]
-
-
-def csv_to_dataframe(csv_path: str) -> pandasDataFrame:
-    df = pd.read_csv(csv_path, dtype=str, skip_blank_lines=False)
-    df = df.fillna('')
-    return df
+from typing import Union
+from textwrap import dedent
 
 
 class Validator:
-    def __init__(self, data: data = None, *, region_isocode: str = None,
-                 region_name: str = None, name: str = None) -> None:
+    def __init__(self, data: Union[str, pd.DataFrame],
+                 indicator: str,
+                 is_global: bool = False):
+        
+        self.valid_indicator_name = True
+        self.invalid_name_message = ""
+
+        if indicator.lower() == 'hf_consumption':
+            iso = 'COUNTRY_ISOCODE'
+            reg = 'COUNTRY_SHORT_ENGLISH_NAME'
+            nam = 'SHORT_ENGLISH_NAME'
+            tot = True
+            order = []
+        elif indicator.lower() == 'hf_investment':
+            iso = 'COUNTRY_ISOCODE'
+            reg = 'COUNTRY_SHORT_ENGLISH_NAME'
+            nam = 'SHORT_ENGLISH_NAME'
+            tot = True
+            order = []
+        elif indicator.lower() == 'hf_external':
+            iso = 'COUNTRY_ISOCODE'
+            reg = 'COUNTRY_SHORT_ENGLISH_NAME'
+            nam = 'SHORT_ENGLISH_NAME'
+            tot = False
+            order = ['Exports', 'Imports']
+        elif indicator.lower() == 'hf_sectoral':
+            iso = 'COUNTRY_ISOCODE'
+            reg = 'COUNTRY_SHORT_ENGLISH_NAME'
+            nam = 'SUBSECTOR_SHORT_ENG'
+            tot = False
+            order = []
+        elif indicator.lower() == 'hg_national':
+            iso = 'COUNTRY_ISOCODE'
+            reg = 'COUNTRY_SHORT_ENGLISH_NAME'
+            nam = 'SHORT_ENGLISH_NAME'
+            tot = True
+            order = []
+        elif indicator.lower() == 'hg_regions':
+            iso = 'ISOCODE_PAIS'
+            reg = 'COUNTRY_SHORT_ENGLISH_NAME'
+            nam = 'SHORT_ENGLISH_NAME'
+            tot = True
+            order = []
+        elif indicator.lower() == 'hg_states':
+            iso = 'ISOCODE_PAIS'
+            reg = 'COUNTRY_SHORT_ENGLISH_NAME'
+            nam = 'SHORT_ENGLISH_NAME'
+            tot = True
+            order = []
+        elif indicator.lower() == 'hg_cities':
+            iso = 'ISOCODE'
+            reg = 'ISOCODE_SHORT_ENGLISH_NAME'
+            nam = 'SHORT_ENGLISH_NAME'
+            tot = True
+            order = []
+        else:
+            self.valid_indicator_name = False
+            self.invalid_name_message =  dedent(f"""\
+                ERROR: El indicador "{indicator}" no es válido.
+
+                Indicadores válidos:
+                    "hf_consumption": consumo (alta frecuencia)
+                    "hf_investment":  inversión (alta frecuencia)
+                    "hf_external":    sector exterior (alta frecuencia)
+                    "hf_sectoral":    actividad sectorial (alta frecuencia)
+                    "hg_national":    consumo nacional (alta granularidad)
+                    "hg_regions":     consumo por regiones (alta granularidad)
+                    "hg_states":      consumo por estados (alta granularidad)
+                    "hg_cities":      consumo por ciudades (alta granularidad)
+                """)
+        
+        if not self.valid_indicator_name:
+            print(self.invalid_name_message)
+            return
+        
+        self.region_isocode = iso
+        self.region_name = reg
+        self.name = nam
+        self.requires_total = tot
+        self.order = order
+        
         if type(data) == str:
-            self.df = csv_to_dataframe(data)
-        elif type(data) == pandasDataFrame:
+            df = pd.read_csv(data, dtype=str, skip_blank_lines=False)
+            df = df.fillna('')
+            self.df = df
+        elif type(data) == pd.DataFrame:
             self.df = data.copy()
+
         self.df = self.df.rename(columns={
             'NOMINAL_REAL_TYPE': 'type',
             'INTERANUAL_VARIATION_DATE': 'date',
             'INTERANUAL_VARIATION': 'value',
-            region_isocode: 'iso',
-            region_name: 'region',
-            name: 'name'})
+            self.region_isocode: 'iso',
+            self.region_name: 'region',
+            self.name: 'name'})
+        
         self.date_min = self.df.query('date != ""')['date'].min()
         self.date_max = self.df.query('date != ""')['date'].max()
         self.days = (datetime.fromisoformat(self.date_max)
                      - datetime.fromisoformat(self.date_min)).days + 1
+        
         self.errors = []
 
-    def _test_regex(self, series: pandasSeries, regex: str) -> dict:
+    def _test_regex(self, series: pd.Series, regex: str) -> dict:
         series = series.copy()
         results = series.str.fullmatch(regex)
         match_true = series[results]
@@ -105,16 +179,33 @@ class Validator:
             self.errors.append(f'El registro {m} no tiene datos para la '
                                'última fecha.')
     
+    def _test_total(self) -> None:
+        if self.requires_total and 'Total' not in self.df['name'].values:
+            self.errors.append('Falta la columna "Total".')
+    
+    def _test_order(self) -> None:
+        if len(self.order) > 0:
+            actual_order = list(self.df['name'].unique())
+            if self.order != actual_order:
+                self.errors.append(f'El orden correcto es: {self.order}.')
+
     def is_valid(self) -> bool:
+        if not self.valid_indicator_name:
+            return False
         self._test_date_number()
         self._test_date_continuity()
         self._test_nr_correspondence()
         self._test_dates()
         self._test_values()
         self._test_last_observation()
+        self._test_total()
+        self._test_order()
         return True if len(self.errors) == 0 else False
     
     def validate(self) -> None:
+        if not self.valid_indicator_name:
+            print(self.invalid_name_message)
+            return
         if self.is_valid():
             print('No se encontraron errores.')
         else:
