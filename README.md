@@ -1,3 +1,6 @@
+> [!CAUTION]
+> **Esta versión incorpora cambios importantes en el uso del módulo**, revisa con detalle la sección sobre [creación del objeto `Validator`](#32-crear-un-objeto-validator-para-cada-tabla-final).
+
 # Validador de tablas finales
 
 
