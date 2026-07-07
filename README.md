@@ -10,11 +10,18 @@
 
 ### 2.1. Opción A: instalación local con pip
 
-Para instalar usando pip, ejecutar la siguiente línea en la terminal:
+Para instalar (sólo para el usuario actual) usando pip, ejecutar la siguiente línea en la terminal:
 
 ```bash
-pip install git+https://github.com/r-leo/bigdata_validator.git
+pip --user install git+https://github.com/r-leo/bigdata_validator.git
 ```
+
+Para desinstalar:
+
+```bash
+pip uninstall bigdata_validator
+```
+
 
 ### 2.2. Opción B: descarga directa (sin instalación)
 
