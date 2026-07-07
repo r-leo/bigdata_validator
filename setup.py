@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='bigdata_validator',
-    version='2.1.0',
+    version='3.0.0',
     install_requires=[
         'pandas'
     ],

@@ -28,14 +28,13 @@ Para usar el módulo sin instalarlo, descargar el archivo [bigdata_validator.py]
 Para importar el módulo:
 
 ```python
-import bigdata_validator
-from bigdata_validator import Validator
+from bigdata_validator import Validator, HF, HGC
 ```
 
-Para verificar que esté instalada la versión más reciente (`2.1.0`):
+Para verificar que esté instalada la versión más reciente (`3.0.0`):
 
 ```python
-print(bigdata_validator.__version__)
+print(Validator.version)
 ```
 
 > [!NOTE]
@@ -48,29 +47,25 @@ print(bigdata_validator.__version__)
 
 La clase `Validator` se crea pasando los siguientes parámetros:
 
-* **`data`**: `str` o `pandas.DataFrame` (requerido). La tabla final que se va a validar. Puede ser un objeto `pandas.DataFrame` o un string que contenga la ruta al archivo CSV que contiene los datos. En caso de pasar la ruta a un archivo CSV, éste debe estar codificado con UTF-8.
-* **`indicator`**: `str` (requerido). El nombre del indicador. Debe tomar uno de los siguientes posibles valores:
+* **`data`**: `str`. Ruta al archivo CSV que contiene los datos. Debe estar codificado con UTF-8.
+* **`indicator`**: miembro de `HF` o `HGC` (requerido). El indicador que va a evaluarse. Debe tomar uno de los siguientes posibles valores:
    * Indicadores de *alta frecuencia*:
-     * `"hf_consumption"` = consumo.
-     * `"hf_investment"` = inversión.
-     * `"hf_external"` = sector exterior.
-     * `"hf_sectoral"` = actividad sectorial.
+     * `HF.CONSUMPTION` = consumo.
+     * `HF.EXTERNAL` = sector exterior.
+     * `HF.INVESTMENT` = inversión.
+     * `HF.SECTORAL` = actividad sectorial.
    * Indicadores de *alta granularidad*:
-     * `"hg_national"` =  consumo agregado (nacional).
-     * `"hg_regions"` = consumo por regiones.
-     * `"hg_states"` = consumo por estados.
-     * `"hg_cities"` = consumo por ciudades.
-* **`file_separator`**: `str` (opcional, por defecto: `","`). El separador de campos en caso de que los datos provengan de un archivo CSV.
-* **`decimal_separator`**: `str` (opcional, por defecto: `"."`). El separador decimal de la variable `INTERANUAL_VARIATION_DATE`. Este separador se emplea independientemente de si los datos proporcionados son un archivo CSV o un DataFrame de pandas. Sólo se admiten como valores el punto (`"."`) y la coma (`","`).
+     * `HGC.COUNTRY` =  consumo agregado nacional.
+     * `HGC.REGIONS` = consumo por regiones.
+     * `HGC.STATES` = consumo por estados.
+     * `HGC.CITIES` = consumo por ciudades.
+* **`file_separator`**: `str` (opcional, por defecto: `","`). El separador de campos del CSV.
+* **`decimal_separator`**: `str` (opcional, por defecto: `"."`). El separador decimal de las variables numéricas. Sólo se admiten como valores el punto (`"."`) y la coma (`","`).
 
 Ejemplo:
 
 ```python
-# Si los datos están contenidos en un CSV:
-val_investment = Validator('final_table_investment.csv', 'hf_investment')
-
-# Si los datos están ya en un dataframe de pandas:
-val_investment = Validator(df_investment, 'hf_investment')
+val_investment = Validator('final_table_investment.csv', HF.INVESTMENT)
 ```
 
 
@@ -127,5 +122,5 @@ Por otra parte, `is_valid()` devuelve `True` únicamente cuando se satisfacen to
 1. La variable de variación interanual debe tener el formato definido por la [expresión regular](https://regex101.com/r/U4L5uF/1) `.{0}|(-?\d+\.\d{4})`. Sí se admiten valores vacíos. El formato consta de la concatenación de: **signo**, ya sea negativo (`-`) o sin signo; **parte entera**, consistente en uno o más dígitos; **separador decimal**, que es obligatorio y debe ser un punto (`.`); y **parte decimal**, compuesta por exactamente 4 dígitos (de acuerdo con las políticas, si es necesario deben agregarse ceros a la derecha hasta completar cuatro dígitos en la parte decimal).
 
 ### Condiciones específicas (sólo aplican a algunos indicadores)
-1. Deben existir datos agregados (es decir, la categoría `Total`) para los indicadores de consumo (`hf_consumption`), inversión (`hf_investment`) y todos los de alta granularidad (`hg_*`).
+1. Deben existir datos agregados (totales) para los indicadores de consumo con tarjeta (`HF.CONSUMPTION`), inversión (`HF.INVESTMENT`) y todos los de alta granularidad (`HGC.*`).
 1. El orden de las categorías del  indicador de sector exterior debe ser (exportaciones, importaciones).
