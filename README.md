@@ -107,7 +107,8 @@ Errores encontrados (26):
 
 ## 5. Anexo: estructura del proceso de validación
 
-> **Nota**. No es necesario leer esta sección para usar el módulo. Únicamente describe las pruebas que se llevan a cabo sobre los datos para determinar si son válidos o no.
+> [!NOTE]
+> No es necesario leer esta sección para usar el módulo. Únicamente describe las pruebas que se llevan a cabo sobre los datos para determinar si son válidos o no.
 
 El método `validate()` siempre ejecuta internamente `is_valid()`. Si el resultado es `False`, recopila los errores encontrados junto con su descripción y los imprime línea por línea en la pantalla. En caso contrario indica al usuario que no se encontró ningún error.
 
