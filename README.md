@@ -13,7 +13,7 @@
 Para instalar (sólo para el usuario actual) usando pip, ejecutar la siguiente línea en la terminal:
 
 ```bash
-pip --user install git+https://github.com/r-leo/bigdata_validator.git
+pip install --user git+https://github.com/r-leo/bigdata_validator.git
 ```
 
 Para desinstalar:
